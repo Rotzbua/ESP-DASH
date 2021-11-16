@@ -64,3 +64,19 @@ const uint8_t DASH_HTML[] PROGMEM = { ${indexHTML} };
 
     fs.writeFileSync(__dirname + '/dist/webpage_zopfli.h', source, 'utf8');
 });
+
+{
+    const brotliOptions = {};
+    // Gzip the index.html file with JS Code.
+    const compressed = zlib.brotliCompressSync(html, brotliOptions);
+    const compressed_byte = getByteArray(compressed);
+    
+    let source =
+        `
+const uint32_t DASH_HTML_SIZE = ${compressed_byte.length};
+const uint8_t DASH_HTML[] PROGMEM = { ${compressed_byte} };
+`;
+    
+    
+    fs.writeFileSync(__dirname + '/dist/webpage_brotli.h', source, 'utf8');
+}
